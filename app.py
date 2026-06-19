@@ -59,6 +59,9 @@ def procesar_dni(texto_usuario):
             "No se encontró un empleado registrado con ese DNI. Verificá el dato e intentá nuevamente."
         )
         return
+    
+    st.session_state.empleado = empleado
+    st.session_state.estado = "ESPERANDO_CANTIDAD_DIAS"
 
     agregar_mensaje(
         "assistant",
@@ -66,8 +69,32 @@ def procesar_dni(texto_usuario):
             f"Empleado encontrado: {empleado['nombre']} {empleado['apellido']}. "
             f"Sector: {empleado['sector']}. "
             f"Días disponibles: {empleado['dias_disponibles']}."
+            "¿Cuántos días de vacaciones querés solicitar?"
         )
     )
+
+def procesar_cantidad_dias(texto_usuario):
+    # Recibe la cantidad de días solicitados por el empleado
+    empleado = st.session_state.empleado
+
+    agregar_mensaje(
+        "assistant",
+        (
+            f"Recibí tu solicitud para {empleado['nombre']} {empleado['apellido']}. "
+            f"Cantidad ingresada: {texto_usuario}. "
+            "En el próximo paso voy a validar si la cantidad es correcta y si hay saldo disponible."
+        )
+    )
+
+def procesar_entrada(texto_usuario):
+    # Decide qué hacer según el estado actual del bot
+    agregar_mensaje("user", texto_usuario)
+
+    if st.session_state.estado == "ESPERANDO_DNI":
+        procesar_dni(texto_usuario)
+
+    elif st.session_state.estado == "ESPERANDO_CANTIDAD_DIAS":
+        procesar_cantidad_dias(texto_usuario)
 
 def iniciar_chat():
     # Crea el historial inicial del chat si todavía no existe
@@ -81,6 +108,14 @@ def iniciar_chat():
                 ),
             }
         ]
+
+    # Guarda en qué parte del proceso está el usuario
+    if "estado" not in st.session_state:
+        st.session_state.estado = "ESPERANDO_DNI"
+
+    # Guarda los datos del empleado cuando el DNI sea válido
+    if "empleado" not in st.session_state:
+        st.session_state.empleado = None
 
 
 def mostrar_mensajes():
@@ -126,8 +161,7 @@ def main():
     texto_usuario = st.chat_input("Escribí tu mensaje...")
 
     if texto_usuario:
-        agregar_mensaje("user", texto_usuario)
-        procesar_dni(texto_usuario)
+        procesar_entrada(texto_usuario)
         st.rerun()
 
 
