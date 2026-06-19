@@ -18,6 +18,56 @@ def cargar_empleados():
 
     return empleados
 
+def buscar_empleado(dni):
+    # Busca un empleado según el DNI ingresado
+    empleados = cargar_empleados()
+
+    empleado = empleados[empleados["dni"] == dni]
+
+    if empleado.empty:
+        return None
+
+    return empleado.iloc[0]
+
+def validar_dni(dni):
+    # Valida que el DNI no esté vacío y tenga solo números
+    dni = dni.strip()
+
+    if dni == "":
+        return False, "El DNI no puede estar vacío."
+
+    if not dni.isdigit():
+        return False, "El DNI debe contener solo números."
+
+    return True, ""
+
+def procesar_dni(texto_usuario):
+    # Procesa el DNI ingresado por el usuario
+    dni = texto_usuario.strip()
+
+    dni_valido, mensaje_error = validar_dni(dni)
+
+    if not dni_valido:
+        agregar_mensaje("assistant", mensaje_error)
+        return
+
+    empleado = buscar_empleado(dni)
+
+    if empleado is None:
+        agregar_mensaje(
+            "assistant",
+            "No se encontró un empleado registrado con ese DNI. Verificá el dato e intentá nuevamente."
+        )
+        return
+
+    agregar_mensaje(
+        "assistant",
+        (
+            f"Empleado encontrado: {empleado['nombre']} {empleado['apellido']}. "
+            f"Sector: {empleado['sector']}. "
+            f"Días disponibles: {empleado['dias_disponibles']}."
+        )
+    )
 
 def iniciar_chat():
     # Crea el historial inicial del chat si todavía no existe
@@ -77,12 +127,7 @@ def main():
 
     if texto_usuario:
         agregar_mensaje("user", texto_usuario)
-
-        agregar_mensaje(
-            "assistant",
-            "Recibí tu mensaje. En el próximo paso voy a validar el DNI ingresado."
-        )
-
+        procesar_dni(texto_usuario)
         st.rerun()
 
 
