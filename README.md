@@ -1,63 +1,81 @@
-# Chatbot de Gestión de Vacaciones
+# Chatbot de Solicitud de Vacaciones
 
-Trabajo Práctico Integrador de la materia Organización Empresarial.
+Trabajo Práctico Integrador de Organización Empresarial.
 
-## Descripción del proyecto
+Este proyecto consiste en el análisis, modelado y automatización del proceso de solicitud de vacaciones dentro del área de Recursos Humanos de una organización ficticia llamada TecnoGestión S.A.
 
-Este proyecto consiste en el desarrollo de un chatbot web funcional para gestionar solicitudes de vacaciones dentro de una organización ficticia.
+La solución desarrollada es un chatbot web que permite a un empleado ingresar su DNI, consultar sus días disponibles, solicitar una cantidad de días de vacaciones y recibir una respuesta automática según el saldo disponible.
 
-El sistema permite que un empleado ingrese su DNI, consulte sus días disponibles, solicite una cantidad de días de vacaciones y reciba una respuesta automática según las reglas definidas del proceso.
+## Objetivo del proyecto
 
-## Organización seleccionada
-
-La organización ficticia seleccionada es TecnoGestión S.A., una empresa de servicios tecnológicos que cuenta con distintas áreas internas, entre ellas Recursos Humanos, Sistemas, Administración, Ventas y Soporte Técnico.
-
-## Proceso administrativo elegido
-
-El proceso elegido es la gestión de solicitudes de vacaciones de empleados.
-
-Actualmente, este tipo de trámite suele realizarse mediante mensajes, correos o consultas directas al área de Recursos Humanos, lo que puede generar demoras, errores de registro y falta de trazabilidad.
-
-## Solución propuesta
-
-Se propone automatizar el proceso mediante un chatbot web desarrollado en Python con Streamlit.
-
-El bot permite:
-
-- Identificar al empleado mediante DNI.
-- Consultar sus días disponibles.
-- Solicitar una cantidad de días de vacaciones.
-- Aprobar la solicitud si existe saldo suficiente.
-- Rechazar la solicitud si no existe saldo suficiente.
-- Registrar cada solicitud en un archivo CSV.
-- Manejar errores de entrada del usuario.
+El objetivo es transformar un proceso administrativo manual en una solución simple, funcional y trazable. Para esto se modeló el proceso actual AS-IS, se propuso un proceso optimizado TO-BE y se desarrolló un chatbot que representa el funcionamiento del proceso automatizado.
 
 ## Tecnologías utilizadas
 
 - Python
 - Streamlit
 - Pandas
-- CSV como base de datos simulada
+- Archivos CSV
 - Git y GitHub
+- BPMN 2.0
 
-## Estructura del proyecto
+## Funcionamiento general
 
-```text
-tpi-chatbot-vacaciones/
-│
-├── app.py
-├── empleados.csv
-├── solicitudes.csv
-├── README.md
-├── requirements.txt
-├── .gitignore
-│
-├── documentacion/
-│   ├── analisis_sistemico.md
-│   ├── flujo_bpmn_codigo.md
-│   ├── maquina_estados.md
-│   └── capturas/
-│
-└── prompts_ia/
-    └── prompts_usados.md
+El chatbot guía al usuario a través del proceso de solicitud de vacaciones. Primero solicita el DNI del empleado y valida que el dato ingresado sea correcto. Luego consulta el archivo empleados.csv para verificar si el empleado existe y cuántos días de vacaciones tiene disponibles.
+
+Si el empleado cuenta con días disponibles, el sistema solicita la cantidad de días que desea pedir. Luego valida la cantidad ingresada y compara el valor solicitado con el saldo disponible.
+
+Si el saldo es suficiente, la solicitud se aprueba, se registra en solicitudes.csv y se actualizan los días disponibles en empleados.csv. Si el saldo no alcanza, la solicitud se rechaza y también se registra el motivo.
+
+## Archivos principales
+
+- app.py: archivo principal de la aplicación.
+- empleados.csv: contiene los empleados registrados y sus días disponibles.
+- solicitudes.csv: registra las solicitudes realizadas y su resultado.
+- README.md: documentación principal del proyecto.
+- documentacion/: carpeta con documentación complementaria, diagramas BPMN y capturas.
+- prompts_ia/: carpeta con el registro del uso de inteligencia artificial durante el desarrollo.
+
+## Instalación y ejecución
+
+Para ejecutar el proyecto de forma local, primero se deben instalar las librerías necesarias:
+
+```bash
+pip install streamlit pandas
 ```
+
+Luego, desde la carpeta principal del proyecto, se ejecuta la aplicación con el siguiente comando:
+
+```bash
+python -m streamlit run app.py
+```
+
+La aplicación se abrirá en el navegador y permitirá interactuar con el chatbot.
+
+## Diagramas BPMN
+
+Los diagramas del proceso se encuentran dentro de la carpeta documentacion/:
+
+- bpmn_as_is.png: representa el proceso actual manual.
+- bpmn_to_be.png: representa el proceso optimizado mediante el chatbot.
+
+## Pruebas realizadas
+
+Se realizaron pruebas sobre el flujo principal y sobre distintos caminos de error:
+
+- Solicitud aprobada con saldo suficiente.
+- Solicitud rechazada por saldo insuficiente.
+- DNI inválido.
+- DNI inexistente.
+- Empleado sin días disponibles.
+- Cantidad inválida.
+- Actualización de días disponibles.
+- Registro de solicitudes en el archivo CSV.
+
+## Uso de inteligencia artificial
+
+El uso de inteligencia artificial durante el desarrollo se encuentra documentado en la carpeta prompts_ia/. Allí se registran ejemplos representativos de prompts utilizados para organizar el trabajo, seleccionar herramientas, estructurar el código, resolver dudas técnicas y revisar la coherencia entre BPMN y chatbot.
+
+## Estado del proyecto
+
+El proyecto se encuentra funcional y cumple con el flujo principal definido para la solicitud de vacaciones. La aplicación permite consultar empleados, validar datos, registrar solicitudes y actualizar la información correspondiente.

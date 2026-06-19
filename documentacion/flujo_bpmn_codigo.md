@@ -1,18 +1,20 @@
-# Relación entre BPMN y código
+# Relación entre BPMN TO-BE y código
 
-Este documento describe la relación entre el flujo modelado en BPMN y la lógica implementada en el chatbot.
+El proceso TO-BE modelado en BPMN se corresponde con la lógica implementada en el chatbot. Cada decisión principal del diagrama está representada en el código mediante validaciones, condiciones y cambios de estado.
 
-| Elemento del proceso             | Representación en el código                           |
-| -------------------------------- | ----------------------------------------------------- |
-| Inicio del proceso               | Inicio de la aplicación en Streamlit                  |
-| Usuario ingresa DNI              | Entrada mediante chat                                 |
-| Validación de DNI                | Control de campo vacío y formato numérico             |
-| Consulta de empleado             | Búsqueda en `empleados.csv`                           |
-| Gateway: ¿empleado existe?       | Condicional que verifica si el DNI está registrado    |
-| Bot informa días disponibles     | Mensaje generado con datos del empleado               |
-| Usuario ingresa días solicitados | Entrada mediante chat                                 |
-| Gateway: ¿cantidad válida?       | Validación de número entero mayor a cero              |
-| Gateway: ¿saldo suficiente?      | Comparación entre días solicitados y días disponibles |
-| Solicitud aprobada               | Registro con estado “Aprobada” en `solicitudes.csv`   |
-| Solicitud rechazada              | Registro con estado “Rechazada” en `solicitudes.csv`  |
-| Fin del proceso                  | Mensaje final y opción de nueva solicitud             |
+| Elemento del BPMN TO-BE          | Implementación en el código                                         |
+| -------------------------------- | ------------------------------------------------------------------- |
+| Solicitud de DNI                 | Mensaje inicial del chatbot y estado ESPERANDO_DNI                  |
+| Validación del DNI               | Función validar_dni()                                               |
+| Consulta del empleado            | Función buscar_empleado() y lectura de empleados.csv                |
+| Empleado no encontrado           | Condición que informa el error y permite ingresar nuevamente el DNI |
+| Consulta de días disponibles     | Lectura del campo dias_disponibles del empleado                     |
+| Empleado sin días disponibles    | Finalización del proceso sin registrar solicitud                    |
+| Solicitud de cantidad de días    | Estado ESPERANDO_CANTIDAD_DIAS                                      |
+| Validación de cantidad           | Control de número entero mayor a cero                               |
+| Verificación de saldo suficiente | Comparación entre dias_solicitados y dias_disponibles               |
+| Solicitud aprobada               | Registro en solicitudes.csv y actualización de empleados.csv        |
+| Solicitud rechazada              | Registro en solicitudes.csv con motivo de rechazo                   |
+| Nueva solicitud                  | Reinicio del estado del chatbot                                     |
+
+Esta relación permite comprobar que el diagrama no es solo una representación teórica, sino que refleja el funcionamiento real de la solución desarrollada.

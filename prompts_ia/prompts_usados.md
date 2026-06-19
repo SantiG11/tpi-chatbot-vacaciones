@@ -1,25 +1,14 @@
-# Registro de uso de herramientas de IA
+# Uso de inteligencia artificial
 
-## Objetivo del uso de IA
+Durante el desarrollo del proyecto se utilizó inteligencia artificial como herramienta de apoyo para organizar el trabajo, resolver dudas técnicas, estructurar el código, revisar la coherencia entre BPMN y chatbot, y preparar la documentación final.
 
-Se utilizó IA como herramienta de asistencia para organizar el desarrollo del Trabajo Práctico Integrador, revisar alternativas de escenarios, definir el alcance del proyecto, estructurar la documentación y detectar posibles caminos infelices del proceso.
+| Prompt                                    | Uso dentro del proyecto                                                              |
+| ----------------------------------------- | ------------------------------------------------------------------------------------ |
+| Organización general del proyecto         | Permitió dividir el trabajo en etapas y priorizar tareas.                            |
+| Selección del stack                       | Ayudó a elegir herramientas simples y adecuadas para el alcance del trabajo.         |
+| Estructura del código                     | Ayudó a organizar el programa en funciones claras.                                   |
+| Uso de Streamlit y estado de conversación | Sirvió para comprender el uso de `st.session_state` y mantener el flujo del chatbot. |
+| Robustez y caminos de error               | Permitió definir validaciones y casos alternativos.                                  |
+| Coherencia entre BPMN y código            | Ayudó a revisar que el diagrama TO-BE representara el funcionamiento real del bot.   |
 
-## Prompts principales utilizados
-
-### Prompt 1
-
-"Tengo que hacer este trabajo, vos me vas a ayudar a organizarme, controlar y asistirme en el desarrollo de este. No vas a hacer el trabajo por mí sino que vas a ir haciendo o contestando lo que te pida. Para comenzar solo identifica de qué se trata el trabajo, qué tengo que tener hecho."
-
-### Prompt 2
-
-"Para elegir el escenario, quiero que me des una lista de opciones con sus pros y contras para el desarrollo de este trabajo."
-
-### Prompt 3
-
-"Quiero mantener el stack lo más cercano posible a Python, usando solo una herramienta nueva si es necesario para el armado e implementación del bot."
-
-## Uso crítico de IA
-
-Las respuestas obtenidas fueron utilizadas como apoyo para ordenar el trabajo, pero las decisiones finales fueron adaptadas al contexto de la materia, al tiempo disponible y a los conocimientos trabajados durante la cursada.
-
-También se corrigieron sugerencias iniciales cuando no se ajustaban completamente a la consigna, por ejemplo, al descartar la opción de un simulador por consola y reemplazarla por un chatbot web funcional desarrollado con Streamlit.
+Las capturas correspondientes se encuentran en esta misma carpeta.
