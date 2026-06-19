@@ -18,6 +18,10 @@ def cargar_empleados():
 
     return empleados
 
+def guardar_empleados(empleados):
+    # Guarda los cambios en el archivo de empleados
+    empleados.to_csv(EMPLEADOS_CSV, index=False)
+
 def cargar_solicitudes():
     # Carga las solicitudes registradas desde el archivo CSV
     solicitudes = pd.read_csv(SOLICITUDES_CSV, dtype={"dni": str})
@@ -50,6 +54,20 @@ def registrar_solicitud(empleado, dias_solicitados, estado, motivo):
     solicitudes.loc[len(solicitudes)] = nueva_solicitud
 
     solicitudes.to_csv(SOLICITUDES_CSV, index=False)
+
+def actualizar_dias_disponibles(dni, dias_solicitados):
+    # Descuenta los días aprobados del empleados
+    empleados = cargar_empleados()
+
+    empleados.loc[
+        empleados["dni"] == dni,
+        "dias_disponibles"
+    ] = empleados.loc[
+        empleados["dni"] == dni,
+        "dias_disponibles"
+    ].astype(int) - dias_solicitados
+
+    guardar_empleados(empleados)
 
 def buscar_empleado(dni):
     # Busca un empleado según el DNI ingresado
@@ -164,14 +182,18 @@ def procesar_cantidad_dias(texto_usuario):
         "Saldo suficiente"
     )
 
+    actualizar_dias_disponibles(empleado["dni"], dias_solicitados)
+
+    nuevo_saldo = dias_disponibles - dias_solicitados
+
     st.session_state.estado = "SOLICITUD_APROBADA"
 
     agregar_mensaje(
         "assistant",
         (
             "Solicitud aprobada. "
-            f"Tenés saldo suficiente para solicitar {dias_solicitados} días "
-            "de vacaciones. La solicitud fue registrada con estado Aprobada"
+            f"Tenés saldo suficiente para solicitar {dias_solicitados} días de vacaciones." 
+            f"Tu nuevo saldo disponible es de {nuevo_saldo} días."
         )
     )
 
