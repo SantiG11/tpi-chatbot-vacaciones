@@ -135,7 +135,7 @@ def procesar_dni(texto_usuario):
         (
             f"Empleado encontrado: {empleado['nombre']} {empleado['apellido']}. "
             f"Sector: {empleado['sector']}. "
-            f"Días disponibles: {empleado['dias_disponibles']}."
+            f"Días disponibles: {empleado['dias_disponibles']}. "
             "¿Cuántos días de vacaciones querés solicitar?"
         )
     )
