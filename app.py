@@ -112,6 +112,22 @@ def procesar_dni(texto_usuario):
         return
     
     st.session_state.empleado = empleado
+
+    dias_disponibles = int(empleado["dias_disponibles"])
+
+    if dias_disponibles <= 0:
+        st.session_state.estado = "FINALIZADO"
+
+        agregar_mensaje(
+            "assistant",
+            (
+                f"Empleado encontrado: {empleado['nombre']} {empleado['apellido']}."
+                f"Sector: {empleado['sector']}. "
+                "Actualmente no tenés días disponibles para solicitar vacaciones."
+            )
+        )
+        return
+
     st.session_state.estado = "ESPERANDO_CANTIDAD_DIAS"
 
     agregar_mensaje(
@@ -268,7 +284,7 @@ def reiniciar_solicitud():
 
 def mostrar_controles():
     # Muestra opciones cuando el proceso ya terminó
-    if st.session_state.estado in ["SOLICITUD_APROBADA", "SOLICITUD_RECHAZADA"]:
+    if st.session_state.estado in ["SOLICITUD_APROBADA", "SOLICITUD_RECHAZADA", "FINALIZADO"]:
         if st.button("Iniciar nueva solicitud"):
             reiniciar_solicitud()
             st.rerun()
