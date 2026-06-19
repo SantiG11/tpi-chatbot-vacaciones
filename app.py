@@ -289,6 +289,16 @@ def mostrar_controles():
             reiniciar_solicitud()
             st.rerun()
 
+def mostrar_daots_prueba():
+    # Muestra los datos de prueba en la barra lateral
+    empleados = cargar_empleados()
+
+    st.sidebar.subheader("Datos de prueba")
+    st.sidebar.write("Empleados cargados desde empleados.csv")
+
+    with st.sidebar.expander("Ver empleados"):
+        st.dataframe(empleados)
+
 def main():
     # Configura la página principal
     st.set_page_config(
@@ -303,11 +313,7 @@ def main():
         "del área de Recursos Humanos."
     )
 
-    # Carga los empleados para verificar que la base esté disponible
-    empleados = cargar_empleados()
-
-    with st.expander("Ver empleados registrados"):
-        st.dataframe(empleados)
+    mostrar_daots_prueba()
 
     iniciar_chat()
     mostrar_mensajes()
