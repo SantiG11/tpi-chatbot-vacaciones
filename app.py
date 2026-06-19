@@ -18,6 +18,39 @@ def cargar_empleados():
 
     return empleados
 
+def cargar_solicitudes():
+    # Carga las solicitudes registradas desde el archivo CSV
+    solicitudes = pd.read_csv(SOLICITUDES_CSV, dtype={"dni": str})
+
+    return solicitudes
+
+def obtener_id_solicitud():
+    # Genera el número de la próxima solicitud
+    solicitudes = cargar_solicitudes()
+
+    if solicitudes.empty:
+        return 1
+
+    return len(solicitudes) + 1
+
+def registrar_solicitud(empleado, dias_solicitados, estado, motivo):
+    # Guarda una nueva solicitud en el archivo CSV
+    solicitudes = cargar_solicitudes()
+
+    nueva_solicitud = {
+        "id_solicitud": obtener_id_solicitud(),
+        "dni": empleado["dni"],
+        "nombre_completo": f"{empleado['nombre']} {empleado['apellido']}",
+        "sector": empleado["sector"],
+        "dias_solicitados": dias_solicitados,
+        "estado": estado,
+        "motivo": motivo,
+    }
+
+    solicitudes.loc[len(solicitudes)] = nueva_solicitud
+
+    solicitudes.to_csv(SOLICITUDES_CSV, index=False)
+
 def buscar_empleado(dni):
     # Busca un empleado según el DNI ingresado
     empleados = cargar_empleados()
@@ -104,6 +137,13 @@ def procesar_cantidad_dias(texto_usuario):
     dias_disponibles = int(empleado["dias_disponibles"])
 
     if dias_solicitados > dias_disponibles:
+        registrar_solicitud(
+            empleado,
+            dias_solicitados,
+            "Rechazada",
+            "Saldo insuficiente"
+        )
+
         st.session_state.estado = "SOLICITUD_RECHAZADA"
 
         agregar_mensaje(
@@ -112,9 +152,17 @@ def procesar_cantidad_dias(texto_usuario):
                 "Solicitud rechazada. "
                 f"Pediste {dias_solicitados} días, pero solo tenés "
                 f"{dias_disponibles} días disponibles."
+                "La solicitud fue registrada con estado Rechazada"
             )
         )
         return
+    
+    registrar_solicitud(
+        empleado,
+        dias_solicitados,
+        "Aprobada",
+        "Saldo suficiente"
+    )
 
     st.session_state.estado = "SOLICITUD_APROBADA"
 
@@ -123,7 +171,7 @@ def procesar_cantidad_dias(texto_usuario):
         (
             "Solicitud aprobada. "
             f"Tenés saldo suficiente para solicitar {dias_solicitados} días "
-            "de vacaciones."
+            "de vacaciones. La solicitud fue registrada con estado Aprobada"
         )
     )
 
