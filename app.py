@@ -282,9 +282,17 @@ def reiniciar_solicitud():
         }
     ]
 
+def proceso_finalizado():
+    # Indica si el proceso actual ya terminó
+    return st.session_state.estado in [
+        "SOLICITUD_APROBADA",
+        "SOLICITUD_RECHAZADA",
+        "FINALIZADO"
+    ]
+
 def mostrar_controles():
     # Muestra opciones cuando el proceso ya terminó
-    if st.session_state.estado in ["SOLICITUD_APROBADA", "SOLICITUD_RECHAZADA", "FINALIZADO"]:
+    if proceso_finalizado():
         if st.button("Iniciar nueva solicitud"):
             reiniciar_solicitud()
             st.rerun()
@@ -325,7 +333,7 @@ def main():
     mostrar_mensajes()
     mostrar_controles()
 
-    texto_usuario = st.chat_input("Escribí tu mensaje...")
+    texto_usuario = st.chat_input("Escribí tu mensaje...", disabled=proceso_finalizado())
 
     if texto_usuario:
         procesar_entrada(texto_usuario)
