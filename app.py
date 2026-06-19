@@ -313,6 +313,11 @@ def mostrar_datos_prueba():
     with st.sidebar.expander("Ver solicitudes"):
         st.dataframe(solicitudes)
 
+def mostrar_estado_actual():
+    # Muestra el estado actual del proceso en la barra lateral
+    st.sidebar.subheader("Estado del proceso")
+    st.sidebar.write(st.session_state.estado)
+
 def main():
     # Configura la página principal
     st.set_page_config(
@@ -327,9 +332,11 @@ def main():
         "del área de Recursos Humanos."
     )
 
-    mostrar_datos_prueba()
-
     iniciar_chat()
+
+    mostrar_datos_prueba()
+    mostrar_estado_actual()
+
     mostrar_mensajes()
     mostrar_controles()
 
