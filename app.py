@@ -289,15 +289,21 @@ def mostrar_controles():
             reiniciar_solicitud()
             st.rerun()
 
-def mostrar_daots_prueba():
+def mostrar_datos_prueba():
     # Muestra los datos de prueba en la barra lateral
     empleados = cargar_empleados()
+    solicitudes = cargar_solicitudes()
 
     st.sidebar.subheader("Datos de prueba")
     st.sidebar.write("Empleados cargados desde empleados.csv")
 
     with st.sidebar.expander("Ver empleados"):
         st.dataframe(empleados)
+
+    st.sidebar.write("Solicitudes registradas en solicitudes.csv")
+
+    with st.sidebar.expander("Ver solicitudes"):
+        st.dataframe(solicitudes)
 
 def main():
     # Configura la página principal
@@ -313,7 +319,7 @@ def main():
         "del área de Recursos Humanos."
     )
 
-    mostrar_daots_prueba()
+    mostrar_datos_prueba()
 
     iniciar_chat()
     mostrar_mensajes()
