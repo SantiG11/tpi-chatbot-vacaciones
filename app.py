@@ -210,7 +210,7 @@ def procesar_entrada(texto_usuario):
     else:
         agregar_mensaje(
             "assistant",
-            "El proceso actual ya finalizó. Para hacer otra solicitud, reiniciá la conversación."
+            "El proceso actual ya finalizó. Para hacer otra solicitud, usá el botón de nueva solicitud."
         )
 
 def iniciar_chat():
@@ -251,6 +251,27 @@ def agregar_mensaje(rol, contenido):
         }
     )
 
+def reiniciar_solicitud():
+    # Reinicia el chat para cargar una nueva solicitud
+    st.session_state.estado = "ESPERANDO_DNI"
+    st.session_state.empleado = None
+    
+    st.session_state.mensajes = [
+        {
+            "role": "assistant",
+            "content": (
+                "Nueva solicitud iniciada."
+                "Por favor, ingresá tu DNI"
+            )
+        }
+    ]
+
+def mostrar_controles():
+    # Muestra opciones cuando el proceso ya terminó
+    if st.session_state.estado in ["SOLICITUD_APROBADA", "SOLICITUD_RECHAZADA"]:
+        if st.button("Iniciar nueva solicitud"):
+            reiniciar_solicitud()
+            st.rerun()
 
 def main():
     # Configura la página principal
@@ -274,6 +295,7 @@ def main():
 
     iniciar_chat()
     mostrar_mensajes()
+    mostrar_controles()
 
     texto_usuario = st.chat_input("Escribí tu mensaje...")
 
