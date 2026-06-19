@@ -74,15 +74,56 @@ def procesar_dni(texto_usuario):
     )
 
 def procesar_cantidad_dias(texto_usuario):
-    # Recibe la cantidad de días solicitados por el empleado
+     # Valida la cantidad de días solicitados
+    cantidad = texto_usuario.strip()
+
+    if cantidad == "":
+        agregar_mensaje(
+            "assistant",
+            "La cantidad de días no puede estar vacía. Ingresá un número entero mayor a 0."
+        )
+        return
+
+    try:
+        dias_solicitados = int(cantidad)
+    except ValueError:
+        agregar_mensaje(
+            "assistant",
+            "La cantidad debe ser un número entero. Por favor, intentá nuevamente."
+        )
+        return
+
+    if dias_solicitados <= 0:
+        agregar_mensaje(
+            "assistant",
+            "La cantidad solicitada debe ser mayor a 0. Por favor, intentá nuevamente."
+        )
+        return
+
     empleado = st.session_state.empleado
+    dias_disponibles = int(empleado["dias_disponibles"])
+
+    if dias_solicitados > dias_disponibles:
+        st.session_state.estado = "SOLICITUD_RECHAZADA"
+
+        agregar_mensaje(
+            "assistant",
+            (
+                "Solicitud rechazada. "
+                f"Pediste {dias_solicitados} días, pero solo tenés "
+                f"{dias_disponibles} días disponibles."
+            )
+        )
+        return
+
+    st.session_state.estado = "SOLICITUD_APROBADA"
 
     agregar_mensaje(
         "assistant",
         (
-            f"Recibí tu solicitud para {empleado['nombre']} {empleado['apellido']}. "
-            f"Cantidad ingresada: {texto_usuario}. "
-            "En el próximo paso voy a validar si la cantidad es correcta y si hay saldo disponible."
+            "Solicitud aprobada. "
+            f"Tenés saldo suficiente para solicitar {dias_solicitados} días "
+            "de vacaciones."
         )
     )
 
@@ -95,6 +136,12 @@ def procesar_entrada(texto_usuario):
 
     elif st.session_state.estado == "ESPERANDO_CANTIDAD_DIAS":
         procesar_cantidad_dias(texto_usuario)
+
+    else:
+        agregar_mensaje(
+            "assistant",
+            "El proceso actual ya finalizó. Para hacer otra solicitud, reiniciá la conversación."
+        )
 
 def iniciar_chat():
     # Crea el historial inicial del chat si todavía no existe
